@@ -25,25 +25,19 @@ def gusfield_z(pattern, text):
     matches = []
     for i in range(len(z)):
         if z[i] == len(pattern):
-            matches.append(i - len(pattern) - 1)
-    return matches
+            return i - len(pattern) - 1
+    return -1
 
 import docx
 import time
 
 # Open the Word file
 doc = docx.Document(r"C:\Users\lenovo\Downloads\Raven.docx")
-
-text = " "
-
-# Iterate over paragraphs in the document
-for para in doc.paragraphs:
-    # Print the text of each paragraph
-    text += para.text
+text = '\n'.join([para.text for para in doc.paragraphs])
 
 
 #small pattern
-pat_small = "Lenore"
+pat_small = "silence"
 start_time = time.time()
 indices_small = gusfield_z(pat_small,text)
 elapsed_time_small = time.time() - start_time
@@ -51,7 +45,7 @@ print(f"Indices of '{pat_small}' found using Gusfield algorithm: {indices_small}
 print(f"Elapsed time for small pattern: {elapsed_time_small:.6f} seconds")
 
 #large pattern
-pat_large = "Then, methought, the air grew denser, perfumed from an unseen censer "
+pat_large = "Ah, distinctly I remember it was in the bleak December"
 start_time = time.time()
 indices_large = gusfield_z(pat_large,text)
 elapsed_time_large = time.time() - start_time
