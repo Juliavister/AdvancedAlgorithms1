@@ -1,19 +1,26 @@
-import re
-
-
-def brute_force(text, pattern):
-    pattern_regex = pattern.replace('*', '\S*').replace('?', r'\S')
-    pattern_regex = r'{}\b'.format(pattern_regex)
-    n = len(text)
-    m = len(pattern)
+def brute_force(text, pattern, first=True):
+    text_len = len(text)
+    pattern_len = len(pattern)
     i = 0
-    matches = []
-    while i <= n - m:
+    if first:
         j = 0
-        while j < m and (text[i + j] == pattern[j] or pattern[j] == "?"):
+        while j < pattern_len and pattern[j] == '*':
             j += 1
-        if j == m:
-            matches.append(i)
+        if j > 0:
+            pattern = pattern[j:]
+            pattern_len -= j
+    while i <= text_len - pattern_len:
+        match_progress = 0
+        while match_progress < pattern_len and (
+                text[i + match_progress] == pattern[match_progress] or pattern[match_progress] == "?"):
+            match_progress += 1
+        if match_progress == pattern_len:
+            return True
+        if pattern[match_progress:match_progress + 1] == '*':
+            rec_i = i + match_progress
+            while rec_i <= text_len:
+                if brute_force(text[rec_i:], pattern[match_progress + 1:], False):
+                    return True
+                rec_i += 1
         i += 1
-    regex_matches = [m.start() for m in re.finditer(pattern_regex, text)]
-    return sorted(list(set(matches + regex_matches)))
+    return False
