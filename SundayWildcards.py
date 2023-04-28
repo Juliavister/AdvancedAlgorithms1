@@ -2,6 +2,14 @@ def wildSundaySearch(pattern, text):
     m = len(pattern)
     n = len(text)
     pattern_bits = pattern.split('*')
+    i = 0
+    while i < len(pattern_bits) - 1:
+        if pattern_bits[i].endswith('\\'):
+            pattern_bits[i] = pattern_bits[i][:-1] + '*'
+            pattern_bits[i] += pattern_bits[i + 1]
+            del pattern_bits[i + 1]
+        else:
+            i += 1
     pattern_bits_truth = []
     skip_table = {}
     for i in range(m):
