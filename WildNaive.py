@@ -1,26 +1,41 @@
-def brute_force(text, pattern, first=True):
-    text_len = len(text)
-    pattern_len = len(pattern)
-    i = 0
-    if first:
-        j = 0
-        while j < pattern_len and pattern[j] == '*':
+def brute_force(string, pattern):
+    n = len(string)
+    m = len(pattern)
+    i = 0  # index for string
+    j = 0  # index for pattern
+
+    while i < n and j < m:
+        if pattern[j] == '\\':  # Check for escaped '*' or '?'
+            if j + 1 < m and (pattern[j + 1] == '*' or pattern[j + 1] == '?'):
+                if i < n and string[i] == pattern[j + 1]:
+                    i += 1
+                else:
+                    return False
+                j += 2
+            else:
+                if i < n and string[i] == pattern[j + 1]:
+                    i += 1
+                j += 1
+        elif pattern[j] == '?':  # Match any character
+            if j + 1 < m and pattern[j + 1] == '\\':
+                j += 2
+                if i < n:
+                    i += 1
+            else:
+                i += 1
+                j += 1
+        elif pattern[j] == '*':  # Wildcard * matching
+            while i < n and (j + 1 >= m or string[i] != pattern[j + 1]):
+                i += 1
             j += 1
-        if j > 0:
-            pattern = pattern[j:]
-            pattern_len -= j
-    while i <= text_len - pattern_len:
-        match_progress = 0
-        while match_progress < pattern_len and (
-                text[i + match_progress] == pattern[match_progress] or pattern[match_progress] == "?"):
-            match_progress += 1
-        if match_progress == pattern_len:
-            return True
-        if pattern[match_progress:match_progress + 1] == '*':
-            rec_i = i + match_progress
-            while rec_i <= text_len:
-                if brute_force(text[rec_i:], pattern[match_progress + 1:], False):
-                    return True
-                rec_i += 1
-        i += 1
+        else:  # Normal character matching
+            if i < n and string[i] == pattern[j]:
+                i += 1
+                j += 1
+            else:
+                return False
+
+    if j == m:  # If pattern is fully matched
+        return True
+
     return False
