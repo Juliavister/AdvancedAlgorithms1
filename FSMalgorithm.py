@@ -2,27 +2,27 @@ import docx
 import time
 
 def fsm_search(text, pattern):
-    n = len(text)
-    m = len(pattern)
+    n = len(text) #text to search
+    m = len(pattern) #pattern to find
 
-    # DFA
-    dfa = [0] * m
-    j = 0
+    #DFA
+    dfa = [0] * m #creates array of size m and sets all elements to 0
+    j = 0 #keeps track of current state in machine
     for i in range(1, m):
-        while j > 0 and pattern[j] != pattern[i]:
+        while j > 0 and pattern[j] != pattern[i]: #goes through all states until finds a match/or reach start state
             j = dfa[j - 1]
-        if pattern[j] == pattern[i]:
+        if pattern[j] == pattern[i]: #can go to next state if true so increment state
             j += 1
-        dfa[i] = j
+        dfa[i] = j #stores state value at transition index
 
-    # search for pattern
-    j = 0
+    #search for pattern
+    j = 0 #start of the text
     for i in range(n):
-        while j > 0 and text[i] != pattern[j]:
+        while j > 0 and text[i] != pattern[j]: #again goes through all stages until match is found
             j = dfa[j - 1]
-        if text[i] == pattern[j]:
+        if text[i] == pattern[j]: #if a match is found, increment j
             j += 1
-        if j == m:
+        if j == m: #have found a complete match, returns start index of it
             return i - m + 1
     return -1
 
