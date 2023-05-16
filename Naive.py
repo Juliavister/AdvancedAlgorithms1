@@ -4,12 +4,12 @@ import time
 def brute_force(text, pattern):
     n = len(text)
     m = len(pattern)
-    i = 0
-    while i <= n - m:
+    i = 0 #keep track of starting index for possible match
+    while i <= n - m: 
         j = 0
-        while j < m and text[i+j] == pattern[j]:
+        while j < m and text[i+j] == pattern[j]: #iterate through characters of pattern and compare to characters from text
             j += 1
-        if j == m:
+        if j == m: #pattern found, returns the starting index match 
             return i
         i += 1
     return -1
