@@ -2,16 +2,16 @@ import docx
 import time
 
 def brute_force(text, pattern):
-    n = len(text)
-    m = len(pattern)
+    n = len(text) #characters in text
+    m = len(pattern) #characters in pattern
     i = 0 #keep track of starting index for possible match
-    while i <= n - m: 
-        j = 0
+    while i <= n - m: #make sure there is enough elements for complete pattern
+        j = 0 #keep tracks of current position
         while j < m and text[i+j] == pattern[j]: #iterate through characters of pattern and compare to characters from text
             j += 1
-        if j == m: #pattern found, returns the starting index match 
-            return i
-        i += 1
+        if j == m: #pattern reached
+            return i #returns starting index
+        i += 1 #if match not found -> move to next index in text & continue search
     return -1
 
 doc = docx.Document('/Users/juliavister/Desktop/Raven.docx')
