@@ -4,13 +4,13 @@ def rolling_hash(s, base=256, prime=101):
         h = 0
         for row in s:
             for c in row:
-                h = (h * base + ord(c)) % prime
+                h = (h * base + ord(c)) & (prime - 1)
     else:
         # Use polynomial hash for numbers
         h = 0
         for row in s:
             for c in row:
-                h = (h * base + c) % prime
+                h = (h * base + c) & (prime - 1)
     return h
 
 
