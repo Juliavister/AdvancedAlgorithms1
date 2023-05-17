@@ -1,6 +1,4 @@
 def wildSundaySearch(pattern, text):
-    m = len(pattern)
-    n = len(text)
     pattern_bits = pattern.split('*')
     i = 0
     while i < len(pattern_bits) - 1:
@@ -10,29 +8,40 @@ def wildSundaySearch(pattern, text):
             del pattern_bits[i + 1]
         else:
             i += 1
+
     pattern_bits_truth = []
-    skip_table = {}
-    for i in range(m):
-        skip_table[pattern[i]] = m - i
+    m = len(pattern)
+    n = len(text)
     i = 0
+
     for pbl in range(len(pattern_bits)):
         pattern_bit_match = False
-        while i <= n - m:
+        pattern_bit = pattern_bits[pbl]
+        pbl_len = len(pattern_bit)
+        skip_table = {}
+
+        for j in range(pbl_len):
+            skip_table[pattern_bit[j]] = pbl_len - j
+
+        while i <= n - pbl_len:
             j = 0
-            while j < len(pattern_bits[pbl]) and (text[i + j] == pattern_bits[pbl][j] or pattern_bits[pbl][j] == "?"):
+            while j < pbl_len and (text[i + j] == pattern_bit[j] or pattern_bit[j] == "?"):
                 j += 1
-            if j == len(pattern_bits[pbl]):
+            if j == pbl_len:
                 pattern_bit_match = True
                 break
-            if i + len(pattern_bits[pbl]) >= n:
+            if i + pbl_len >= n:
                 break
-            if text[i + len(pattern_bits[pbl])] in skip_table:
-                i += skip_table[text[i + len(pattern_bits[pbl])]]
+            skip = skip_table.get(text[i + pbl_len])
+            if skip is not None:
+                i += skip
             else:
-                i += len(pattern_bits[pbl]) + 1
+                i += pbl_len + 1
+
         pattern_bits_truth.append(pattern_bit_match)
         if not pattern_bit_match:
             break
+
     if False in pattern_bits_truth:
         return False
     else:
