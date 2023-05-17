@@ -5,24 +5,24 @@ def fsm_search(text, pattern):
     n = len(text) #text to search
     m = len(pattern) #pattern to find
 
-    #DFA
-    dfa = [0] * m #creates array of size m and sets all elements to 0
+    #DFA, where transitions are created
+    dfa = [0] * m #creates array of size m and sets all elements to 0 -> represents the states
     j = 0 #keeps track of current state in machine
     for i in range(1, m):
-        while j > 0 and pattern[j] != pattern[i]: #goes through all states until finds a match/or reach start state
-            j = dfa[j - 1]
-        if pattern[j] == pattern[i]: #can go to next state if true so increment state
-            j += 1
+        while j > 0 and pattern[j] != pattern[i]: #iteratestates until finds a match/reach start state.pattern[j]is current chracter, while pattern[i] is character.
+            j = dfa[j - 1] #mismatch occured so update j to previous state
+        if pattern[j] == pattern[i]: #match is found
+            j += 1 #move to next state
         dfa[i] = j #stores state value at transition index
 
     #search for pattern
     j = 0 #start of the text
-    for i in range(n):
-        while j > 0 and text[i] != pattern[j]: #again goes through all stages until match is found
+    for i in range(n): #iterate characters
+        while j > 0 and text[i] != pattern[j]: #same as in dfa, but text[i] is current char.
             j = dfa[j - 1]
-        if text[i] == pattern[j]: #if a match is found, increment j
+        if text[i] == pattern[j]: #if a match is found, move next
             j += 1
-        if j == m: #have found a complete match, returns start index of it
+        if j == m: #complete match, returns start index of match
             return i - m + 1
     return -1
 
