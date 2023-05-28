@@ -1,41 +1,38 @@
-def brute_force(string, pattern):
-    n = len(string)
+def brute_force(pattern, text):
+    pattern_bits = pattern.split('*')
+    i = 0
+    while i < len(pattern_bits) - 1:
+        if pattern_bits[i].endswith('\\'):
+            pattern_bits[i] = pattern_bits[i][:-1] + '*'
+            pattern_bits[i] += pattern_bits[i + 1]
+            del pattern_bits[i + 1]
+        else:
+            i += 1
+
+    pattern_bits_truth = []
     m = len(pattern)
-    i = 0  # index for string
-    j = 0  # index for pattern
+    n = len(text)
+    i = 0
 
-    while i < n and j < m:
-        if pattern[j] == '\\':  # Check for escaped '*' or '?'
-            if j + 1 < m and (pattern[j + 1] == '*' or pattern[j + 1] == '?'):
-                if i < n and string[i] == pattern[j + 1]:
-                    i += 1
-                else:
-                    return False
-                j += 2
-            else:
-                if i < n and string[i] == pattern[j + 1]:
-                    i += 1
-                j += 1
-        elif pattern[j] == '?':  # Match any character
-            if j + 1 < m and pattern[j + 1] == '\\':
-                j += 2
-                if i < n:
-                    i += 1
-            else:
-                i += 1
-                j += 1
-        elif pattern[j] == '*':  # Wildcard * matching
-            while i < n and (j + 1 >= m or string[i] != pattern[j + 1]):
-                i += 1
-            j += 1
-        else:  # Normal character matching
-            if i < n and string[i] == pattern[j]:
-                i += 1
-                j += 1
-            else:
-                return False
+    for pbl in range(len(pattern_bits)):
+        pattern_bit_match = False
+        pattern_bit = pattern_bits[pbl]
+        pbl_len = len(pattern_bit)
 
-    if j == m:  # If pattern is fully matched
+        while i <= n - pbl_len:
+            j = 0
+            while j < pbl_len and (text[i + j] == pattern_bit[j] or pattern_bit[j] == "?"):
+                j += 1
+            if j == pbl_len:
+                pattern_bit_match = True
+                break
+            i += 1
+
+        pattern_bits_truth.append(pattern_bit_match)
+        if not pattern_bit_match:
+            break
+
+    if False in pattern_bits_truth:
+        return False
+    else:
         return True
-
-    return False
